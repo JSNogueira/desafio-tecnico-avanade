@@ -1,0 +1,49 @@
+{
+    "GlobalConfiguration": {
+        "BaseUrl": "http://localhost:5000"
+    },
+    "Routes": [
+        {
+            "UpstreamPathTemplate": "/gateway/produtos",
+            "UpstreamHttpMethod": [
+                "GET"
+            ],
+            "DownstreamPathTemplate": "/produto/obtertodos",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5022
+                }
+            ]
+        },
+        {
+            "UpstreamPathTemplate": "/gateway/produto/{id}",
+            "UpstreamHttpMethod": [
+                "GET", "PUT", "DELETE"
+            ],
+            "DownstreamPathTemplate": "/produto/{id}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5022
+                }
+            ]
+        },
+        {
+            "UpstreamPathTemplate": "/gateway/produto",
+            "UpstreamHttpMethod": [
+                "POST"
+            ],
+            "DownstreamPathTemplate": "/produto",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5022
+                }
+            ]
+        }
+    ]
+}
