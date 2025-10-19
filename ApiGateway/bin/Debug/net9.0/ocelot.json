@@ -8,21 +8,27 @@
             "UpstreamHttpMethod": [
                 "GET"
             ],
-            "DownstreamPathTemplate": "/api/produtos",
+            "DownstreamPathTemplate": "/produto/obtertodos",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
                     "Host": "localhost",
                     "Port": 5022
                 }
-            ]
-        },
-        {
-            "UpstreamPathTemplate": "/gateway/produtos/{id}",
-            "UpstreamHttpMethod": [
-                "GET"
             ],
-            "DownstreamPathTemplate": "/api/produtos{id}",
+            "RateLimitOptions": {
+                "EnableRateLimiting": true,
+                "Period": "10s",
+                "Limit": 3,
+                "PeriodTimespan": 10
+            }
+        },
+        {
+            "UpstreamPathTemplate": "/gateway/produto/{id}",
+            "UpstreamHttpMethod": [
+                "GET", "PUT", "DELETE"
+            ],
+            "DownstreamPathTemplate": "/produto/{id}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -32,11 +38,11 @@
             ]
         },
         {
-            "UpstreamPathTemplate": "/gateway/produtos",
+            "UpstreamPathTemplate": "/gateway/produto",
             "UpstreamHttpMethod": [
                 "POST"
             ],
-            "DownstreamPathTemplate": "/api/produtos",
+            "DownstreamPathTemplate": "/produto",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
