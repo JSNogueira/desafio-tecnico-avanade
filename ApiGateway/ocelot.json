@@ -12,8 +12,8 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 5001
+                    "Host": "estoque",
+                    "Port": 8080
                 }
             ],
             "RateLimitOptions": {
@@ -32,8 +32,8 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 5001
+                    "Host": "estoque",
+                    "Port": 8080
                 }
             ]
         },
@@ -46,8 +46,8 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 5001
+                    "Host": "estoque",
+                    "Port": 8080
                 }
             ]
         }, 
@@ -60,8 +60,8 @@
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
-                    "Host": "localhost",
-                    "Port": 5001
+                    "Host": "estoque",
+                    "Port": 8080
                 }
             ]
         }

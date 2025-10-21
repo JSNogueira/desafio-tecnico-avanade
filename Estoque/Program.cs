@@ -1,14 +1,19 @@
 using System.Text.Json.Serialization;
 using Estoque.Context;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var connectionString =
+    builder.Configuration.GetConnectionString("MySql")
+    ?? Environment.GetEnvironmentVariable("ConnectionStrings__MySql");
+
 builder.Services.AddDbContext<EstoqueContext>(options =>
     options.UseMySql(
-        builder.Configuration.GetConnectionString("MySql"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("MySql"))
+        connectionString,
+        ServerVersion.AutoDetect(connectionString)
     ));
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -19,6 +24,13 @@ builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Executa migrations automaticamente ao iniciar
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<EstoqueContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
