@@ -32,8 +32,8 @@ services:
   # 📦 Microserviço de Estoque
   estoque:
     build:
-      context: ./Estoque
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./Estoque/Dockerfile
     container_name: estoque
     restart: always
     depends_on:
@@ -52,8 +52,8 @@ services:
   # 🧾 Microserviço de Vendas
   vendas:
     build:
-      context: ./Vendas
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./Vendas/Dockerfile
     container_name: vendas
     restart: always
     depends_on:
@@ -72,8 +72,8 @@ services:
   # 🌐 API Gateway
   apigateway:
     build:
-      context: ./ApiGateway
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./ApiGateway/Dockerfile
     container_name: apigateway
     restart: always
     depends_on:

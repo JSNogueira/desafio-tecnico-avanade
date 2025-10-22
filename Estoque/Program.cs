@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Estoque.Consumers;
 using Estoque.Context;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,29 @@ builder.Services.AddDbContext<EstoqueContext>(options =>
         connectionString,
         ServerVersion.AutoDetect(connectionString)
     ));
+
+// Configurar RabbitMQ
+builder.Services.AddMassTransit(x =>
+{
+    // Adiciona o consumer que vai processar a verificação de estoque
+    x.AddConsumer<VerificarEstoqueConsumer>();
+
+    // Configura o transporte via RabbitMQ
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration["RabbitMQ__Host"] ?? "rabbitmq", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        // Endpoint para consumir as mensagens de verificação de estoque
+        cfg.ReceiveEndpoint("verificar-estoque", e =>
+        {
+            e.ConfigureConsumer<VerificarEstoqueConsumer>(context);
+        });
+    });
+});
 
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));

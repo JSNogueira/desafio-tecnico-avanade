@@ -1198,6 +1198,16 @@
         "build": {
           "buildTransitive/net6.0/_._": {}
         }
+      },
+      "MensagensCompartilhadas/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/MensagensCompartilhadas.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/MensagensCompartilhadas.dll": {}
+        }
       }
     }
   },
@@ -3662,12 +3672,18 @@
         "system.threading.ratelimiting.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "MensagensCompartilhadas/1.0.0": {
+      "type": "project",
+      "path": "../MensagensCompartilhadas/MensagensCompartilhadas.csproj",
+      "msbuildProject": "../MensagensCompartilhadas/MensagensCompartilhadas.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
       "MassTransit >= 8.5.4",
       "MassTransit.RabbitMQ >= 8.5.4",
+      "MensagensCompartilhadas >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 9.0.8",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.0",
       "Pomelo.EntityFrameworkCore.MySql >= 9.0.0",
@@ -3701,7 +3717,11 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Noga\\Documents\\Nogueira\\Estudos\\DIO\\Avanade C#\\desafio-tecnico-avanade\\MensagensCompartilhadas\\MensagensCompartilhadas.csproj": {
+              "projectPath": "C:\\Users\\Noga\\Documents\\Nogueira\\Estudos\\DIO\\Avanade C#\\desafio-tecnico-avanade\\MensagensCompartilhadas\\MensagensCompartilhadas.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
