@@ -22,6 +22,7 @@ builder.Services.AddMassTransit(x =>
 {
     // Adiciona o consumer que vai processar a verificação de estoque
     x.AddConsumer<VerificarEstoqueConsumer>();
+    x.AddConsumer<VerificarProdutosPedidoConsumer>();
 
     // Configura o transporte via RabbitMQ
     x.UsingRabbitMq((context, cfg) =>
@@ -36,6 +37,11 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint("verificar-estoque", e =>
         {
             e.ConfigureConsumer<VerificarEstoqueConsumer>(context);
+        });
+
+        cfg.ReceiveEndpoint("verificar-produtos-pedido", e =>
+        {
+            e.ConfigureConsumer<VerificarProdutosPedidoConsumer>(context);
         });
     });
 });

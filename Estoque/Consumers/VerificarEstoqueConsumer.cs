@@ -19,15 +19,31 @@ namespace Estoque.Consumers
             var produto = await _context.Produtos
                 .FirstOrDefaultAsync(p => p.Id == context.Message.ProdutoId);
 
-            var disponivel = produto != null && produto.Quantidade >= context.Message.Quantidade;
+            bool disponivel = false;
+            int quantidadeRestante = 0;
+
+            if (produto != null)
+            {
+                quantidadeRestante = produto.Quantidade;
+                if (produto.Quantidade > 0)
+                {
+                    disponivel = true;
+                }
+
+                if (produto.Quantidade >= context.Message.Quantidade)
+                {
+                    produto.Quantidade -= context.Message.Quantidade;
+                    _context.Produtos.Update(produto);
+                    _context.SaveChanges();
+                }
+            }
 
             await context.RespondAsync(new RespostaEstoqueMessage
             {
                 ProdutoId = context.Message.ProdutoId,
-                Disponivel = disponivel
+                Disponivel = disponivel,
+                QuantidadeRestante = quantidadeRestante
             });
-
-            Console.WriteLine($"[Estoque] Produto {context.Message.ProdutoId}: {(disponivel ? "Disponível" : "Indisponível")}");
         }
     }
 }

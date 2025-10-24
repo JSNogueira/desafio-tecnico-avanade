@@ -4,5 +4,6 @@ namespace MensagensCompartilhadas.Messages
     {
         public int ProdutoId { get; set; }
         public bool Disponivel { get; set; }
+        public int QuantidadeRestante { get; set; }
     }
 }
