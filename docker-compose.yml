@@ -69,6 +69,26 @@ services:
     networks:
       - micro_net
 
+  # 🔐 AuthService
+  authservice:
+    build:
+      context: .
+      dockerfile: ./AuthService/Dockerfile
+    container_name: authservice
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__MySql=Server=mysql;Port=3306;Database=authdb;User=root;Password=root;
+      - Jwt__Key=minha_chave_super_secreta_jwt_123456  # chave usada para assinar tokens
+      - Jwt__Issuer=AuthService
+      - Jwt__Audience=Microservices
+    ports:
+      - "5003:8080"
+    networks:
+      - micro_net
+
   # 🌐 API Gateway
   apigateway:
     build:
