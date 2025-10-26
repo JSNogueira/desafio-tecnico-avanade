@@ -25,7 +25,7 @@ builder.Services.AddControllers()
     });
 
 // Config JWT
-var jwtKey = builder.Configuration["Jwt:Key"] ?? "chave-super-secreta";
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "minha_chave_super_secreta_jwt_123456";
 var issuer = builder.Configuration["Jwt:Issuer"] ?? "AuthService";
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
