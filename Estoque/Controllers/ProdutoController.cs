@@ -1,5 +1,6 @@
 using Estoque.Context;
 using Estoque.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Estoque.Controllers
@@ -45,6 +46,7 @@ namespace Estoque.Controllers
             return Ok(produto);
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public IActionResult Cadastrar(Produto produto)
         {
