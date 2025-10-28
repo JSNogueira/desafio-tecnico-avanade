@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using MassTransit;
+using MensagensCompartilhadas.Messages;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -50,6 +51,12 @@ builder.Services.AddDbContext<VendasContext>(options =>
 // Configurar MassTransit + RabbitMQ
 builder.Services.AddMassTransit(x =>
 {
+    // Registra os RequestClients usados no controller
+    x.AddRequestClient<VerificarEstoqueMessage>(new Uri("queue:verificar-estoque"));
+    x.AddRequestClient<VerificarProdutosPedidoMessage>(new Uri("queue:verificar-produtos-pedido"));
+    x.AddRequestClient<VerificarItensPedidoMessage>(new Uri("queue:verificar-itens-pedido"));
+
+    // Configuração do host RabbitMQ
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host(builder.Configuration["RabbitMQ__Host"] ?? "rabbitmq", "/", h =>
@@ -57,10 +64,10 @@ builder.Services.AddMassTransit(x =>
             h.Username("guest");
             h.Password("guest");
         });
-    });
 
-    // Registra o cliente que vai enviar a requisição de verificação de estoque
-    x.AddRequestClient<MensagensCompartilhadas.Messages.VerificarEstoqueMessage>(new Uri("queue:verificar-estoque"));
+        // permite que o MassTransit descubra os endpoints automaticamente
+        cfg.ConfigureEndpoints(context);
+    });
 });
 
 builder.Services.AddControllers().AddJsonOptions(options =>

@@ -57,7 +57,8 @@ namespace AuthService.Controllers
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, usuario.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, usuario.Id.ToString()),
+                new Claim("email", usuario.Email),
                 new Claim("nome", usuario.Nome),
                 new Claim("tipoUsuario", usuario.TipoUsuario.ToString())
             };

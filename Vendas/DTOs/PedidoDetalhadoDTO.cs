@@ -7,6 +7,6 @@ namespace Vendas.DTOs
         public int ClienteId { get; set; }
         public float ValorTotal { get; set; }
 
-        public List<ItemPedidoDTO> Itens { get; set; } = new();
+        public List<ItemPedidoDetalhadoDTO> Itens { get; set; } = new();
     }
 }

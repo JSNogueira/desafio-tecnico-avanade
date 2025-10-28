@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using MassTransit;
 using MensagensCompartilhadas.Messages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Vendas.Context;
@@ -10,13 +12,17 @@ namespace Vendas.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = "Administrador, Cliente")]
     public class PedidosController : ControllerBase
     {
-        private readonly IRequestClient<VerificarEstoqueMessage> _estoqueClient;
+        private readonly IRequestClient<VerificarItensPedidoMessage> _estoqueClient;
         private readonly IRequestClient<VerificarProdutosPedidoMessage> _produtosClient;
         private readonly VendasContext _context;
-        
-        public PedidosController(IRequestClient<VerificarEstoqueMessage> estoqueClient, IRequestClient<VerificarProdutosPedidoMessage> produtosClient, VendasContext context)
+
+        public PedidosController(
+            IRequestClient<VerificarItensPedidoMessage> estoqueClient,
+            IRequestClient<VerificarProdutosPedidoMessage> produtosClient,
+            VendasContext context)
         {
             _estoqueClient = estoqueClient;
             _produtosClient = produtosClient;
@@ -24,39 +30,64 @@ namespace Vendas.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CriarPedido([FromBody] VerificarEstoqueMessage pedido)
+        public async Task<IActionResult> CriarPedido([FromBody] List<ItemPedidoDTO> itens)
         {
-            // Envia a requisição e aguarda a resposta do microserviço de Estoque
-            var response = await _estoqueClient.GetResponse<RespostaEstoqueMessage>(pedido);
+            if (itens == null || !itens.Any())
+                return BadRequest("O pedido deve conter ao menos um item.");
+
+            // Extrai o ID do usuário autenticado (sub do JWT)
+            var clienteIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                                 ?? User.FindFirst("sub")?.Value;
+            if (clienteIdClaim == null)
+                return Unauthorized("Token inválido.");
+
+            int clienteId = int.Parse(clienteIdClaim);
+
+            // Monta a mensagem para o microserviço de estoque
+            var verificarMsg = new VerificarItensPedidoMessage
+            {
+                Itens = itens.Select(i => new ItemPedidoMessage
+                {
+                    ProdutoId = i.ProdutoId,
+                    Quantidade = i.Quantidade
+                }).ToList()
+            };
+
+            // Envia ao Estoque para verificar disponibilidade
+            var response = await _estoqueClient.GetResponse<RespostaItensPedidoMessage>(verificarMsg);
 
             if (!response.Message.Disponivel)
-                return BadRequest("Produto indisponível.");
+                return BadRequest(response.Message.Mensagem ?? "Um ou mais produtos estão indisponíveis.");
 
-            if (response.Message.QuantidadeRestante < pedido.Quantidade)
-                return BadRequest("Quantidade insuficiente.");
-
-            // Cria e salva o pedido no banco
+            // Todos disponíveis → cria o pedido
             var novoPedido = new Pedido
             {
-                DataPedido = DateTime.Now
+                DataPedido = DateTime.Now,
+                ClienteId = clienteId
             };
 
-            var novoItemPedido = new ItemPedido
+            // Cria os itens do pedido
+            var itensPedido = itens.Select(i => new ItemPedido
             {
                 Pedido = novoPedido,
-                ProdutoId = pedido.ProdutoId,
-                Quantidade = pedido.Quantidade
-            };
+                ProdutoId = i.ProdutoId,
+                Quantidade = i.Quantidade
+            }).ToList();
 
             _context.Pedidos.Add(novoPedido);
-            _context.ItensPedido.Add(novoItemPedido);
-            _context.SaveChanges();
+            _context.ItensPedido.AddRange(itensPedido);
+            await _context.SaveChangesAsync();
+
+            var valorTotal = response.Message.ProdutosDisponiveis
+                .Sum(p => p.Preco * (itens.First(i => i.ProdutoId == p.Id).Quantidade));
 
             return Ok(new
             {
-                Mensagem = "Pedido confirmado com sucesso!",
-                ProdutoId = pedido.ProdutoId,
-                Quantidade = pedido.Quantidade
+                Mensagem = "Pedido criado com sucesso!",
+                PedidoId = novoPedido.Id,
+                ClienteId = clienteId,
+                ValorTotal = valorTotal,
+                Itens = itens
             });
         }
         
@@ -93,7 +124,7 @@ namespace Vendas.Controllers
                 Itens = pedido.Itens.Select(i =>
                 {
                     var produto = produtos.FirstOrDefault(p => p.Id == i.ProdutoId);
-                    return new ItemPedidoDTO
+                    return new ItemPedidoDetalhadoDTO
                     {
                         ProdutoId = i.ProdutoId,
                         NomeProduto = produto?.Nome ?? "Desconhecido",

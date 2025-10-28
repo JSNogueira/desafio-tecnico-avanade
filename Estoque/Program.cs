@@ -51,11 +51,12 @@ builder.Services.AddDbContext<EstoqueContext>(options =>
 // Configurar RabbitMQ
 builder.Services.AddMassTransit(x =>
 {
-    // Adiciona o consumer que vai processar a verificação de estoque
+    // Consumers registrados
     x.AddConsumer<VerificarEstoqueConsumer>();
     x.AddConsumer<VerificarProdutosPedidoConsumer>();
+    x.AddConsumer<VerificarItensPedidoConsumer>();
 
-    // Configura o transporte via RabbitMQ
+    // Configuração do transporte via RabbitMQ
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host(builder.Configuration["RabbitMQ__Host"] ?? "rabbitmq", "/", h =>
@@ -64,7 +65,6 @@ builder.Services.AddMassTransit(x =>
             h.Password("guest");
         });
 
-        // Endpoint para consumir as mensagens de verificação de estoque
         cfg.ReceiveEndpoint("verificar-estoque", e =>
         {
             e.ConfigureConsumer<VerificarEstoqueConsumer>(context);
@@ -73,6 +73,11 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint("verificar-produtos-pedido", e =>
         {
             e.ConfigureConsumer<VerificarProdutosPedidoConsumer>(context);
+        });
+
+        cfg.ReceiveEndpoint("verificar-itens-pedido", e =>
+        {
+            e.ConfigureConsumer<VerificarItensPedidoConsumer>(context);
         });
     });
 });
