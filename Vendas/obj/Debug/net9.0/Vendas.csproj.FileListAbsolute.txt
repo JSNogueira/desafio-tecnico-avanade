@@ -126,3 +126,13 @@ C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\
 C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\Vendas\bin\Debug\net9.0\MassTransit.Abstractions.dll
 C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\Vendas\bin\Debug\net9.0\MassTransit.RabbitMqTransport.dll
 C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\Vendas\bin\Debug\net9.0\RabbitMQ.Client.dll
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\Vendas\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\Vendas\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\Vendas\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\Vendas\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\Vendas\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\Vendas\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\Vendas\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\Vendas\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\Vendas\bin\Debug\net9.0\MensagensCompartilhadas.dll
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\Vendas\bin\Debug\net9.0\MensagensCompartilhadas.pdb

@@ -21,7 +21,8 @@ namespace Vendas.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    DataPedido = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    DataPedido = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ClienteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

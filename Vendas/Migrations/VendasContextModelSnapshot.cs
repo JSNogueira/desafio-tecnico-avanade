@@ -54,6 +54,9 @@ namespace Vendas.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DataPedido")
                         .HasColumnType("datetime(6)");
 
@@ -65,12 +68,17 @@ namespace Vendas.Migrations
             modelBuilder.Entity("Vendas.Models.ItemPedido", b =>
                 {
                     b.HasOne("Vendas.Models.Pedido", "Pedido")
-                        .WithMany()
+                        .WithMany("Itens")
                         .HasForeignKey("PedidoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Pedido");
+                });
+
+            modelBuilder.Entity("Vendas.Models.Pedido", b =>
+                {
+                    b.Navigation("Itens");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,12 @@
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\MensagensCompartilhadas\bin\Debug\net9.0\MensagensCompartilhadas.deps.json
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\MensagensCompartilhadas\bin\Debug\net9.0\MensagensCompartilhadas.dll
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\MensagensCompartilhadas\bin\Debug\net9.0\MensagensCompartilhadas.pdb
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\MensagensCompartilhadas\obj\Debug\net9.0\MensagensCompartilhadas.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\MensagensCompartilhadas\obj\Debug\net9.0\MensagensCompartilhadas.AssemblyInfoInputs.cache
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\MensagensCompartilhadas\obj\Debug\net9.0\MensagensCompartilhadas.AssemblyInfo.cs
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\MensagensCompartilhadas\obj\Debug\net9.0\MensagensCompartilhadas.csproj.CoreCompileInputs.cache
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\MensagensCompartilhadas\obj\Debug\net9.0\MensagensCompartilhadas.sourcelink.json
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\MensagensCompartilhadas\obj\Debug\net9.0\MensagensCompartilhadas.dll
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\MensagensCompartilhadas\obj\Debug\net9.0\refint\MensagensCompartilhadas.dll
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\MensagensCompartilhadas\obj\Debug\net9.0\MensagensCompartilhadas.pdb
+C:\Users\Noga\Documents\Nogueira\Estudos\DIO\Avanade C#\desafio-tecnico-avanade\MensagensCompartilhadas\obj\Debug\net9.0\ref\MensagensCompartilhadas.dll
