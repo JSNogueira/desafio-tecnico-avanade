@@ -1,5 +1,3 @@
-using MensagensCompartilhadas.DTOs;
-
 namespace Vendas.Models
 {
     public class Pedido

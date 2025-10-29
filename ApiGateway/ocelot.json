@@ -53,10 +53,6 @@
           "Port": 8080
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "BearerCliente",
-        "AllowedScopes": []
-      },
       "RateLimitOptions": {
         "EnableRateLimiting": true,
         "Period": "10s",
@@ -81,6 +77,86 @@
         "AuthenticationProviderKey": "BearerAdmin",
         "AllowedScopes": []
       },
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "10s",
+        "Limit": 3,
+        "PeriodTimespan": 10
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/pedido",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/pedidos",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "vendas",
+          "Port": 8080
+        }
+      ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "10s",
+        "Limit": 3,
+        "PeriodTimespan": 10
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/pedidos",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/pedidos",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "vendas",
+          "Port": 8080
+        }
+      ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "10s",
+        "Limit": 3,
+        "PeriodTimespan": 10
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/pedido{id}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/pedidos{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "vendas",
+          "Port": 8080
+        }
+      ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "10s",
+        "Limit": 3,
+        "PeriodTimespan": 10
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/login",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/auth/login",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 8080
+        }
+      ],
       "RateLimitOptions": {
         "EnableRateLimiting": true,
         "Period": "10s",
