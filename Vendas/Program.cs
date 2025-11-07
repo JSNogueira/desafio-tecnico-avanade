@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Vendas.Context;
+using Vendas.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,8 @@ builder.Services.AddDbContext<VendasContext>(options =>
         connectionString,
         ServerVersion.AutoDetect(connectionString)
     ));
+
+builder.Services.AddScoped<PedidoService>();
 
 // Configurar MassTransit + RabbitMQ
 builder.Services.AddMassTransit(x =>

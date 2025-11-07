@@ -1,5 +1,5 @@
-using Estoque.Context;
 using Estoque.Models;
+using Estoque.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,94 +9,69 @@ namespace Estoque.Controllers
     [Route("[controller]")]
     public class ProdutoController : ControllerBase
     {
+        private readonly ProdutoService _produtoService;
 
-        private readonly EstoqueContext _context;
-
-        public ProdutoController(EstoqueContext context)
+        public ProdutoController(ProdutoService produtoService)
         {
-            _context = context;
+            _produtoService = produtoService;
         }
 
         [HttpGet("{id}")]
-        public IActionResult ObterPorId(int id)
+        public async Task<IActionResult> ObterPorId(int id)
         {
-            var produto = _context.Produtos.Find(id);
-
-            if (produto == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(produto);
-            }
+            var produto = await _produtoService.ObterPorIdAsync(id);
+            return produto == null ? NotFound() : Ok(produto);
         }
 
         [HttpGet("ObterPorNome")]
-        public IActionResult ObterPorNome(string nome)
+        public async Task<IActionResult> ObterPorNome(string nome)
         {
-            var produto = _context.Produtos.Where(x => x.Nome.Contains(nome));
-            return Ok(produto);
+            var produtos = await _produtoService.ObterPorNomeAsync(nome);
+            return Ok(produtos);
         }
 
         [HttpGet("ObterTodos")]
-        public IActionResult ObterTodos()
+        public async Task<IActionResult> ObterTodos()
         {
-            var produto = _context.Produtos;
-            return Ok(produto);
+            var produtos = await _produtoService.ObterTodosAsync();
+            return Ok(produtos);
         }
 
         [Authorize(Roles = "Administrador")]
         [HttpPost]
-        public IActionResult Cadastrar(Produto produto)
+        public async Task<IActionResult> Cadastrar(Produto produto)
         {
-            if (produto.Preco <= 0)
-                return BadRequest(new { Erro = "O preço do produto deve ser maior que zero" });
-
-            if (produto.Quantidade < 0)
-                return BadRequest(new { Erro = "A quantidade não pode ser menor que zero" });
-
-            _context.Add(produto);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(ObterPorId), new { id = produto.Id }, produto);
+            try
+            {
+                var novoProduto = await _produtoService.CadastrarAsync(produto);
+                return CreatedAtAction(nameof(ObterPorId), new { id = novoProduto.Id }, novoProduto);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Erro = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
-        public IActionResult Atualizar(int id, Produto produto)
+        public async Task<IActionResult> Atualizar(int id, Produto produto)
         {
-            var produtoBanco = _context.Produtos.Find(id);
-
-            if (produtoBanco == null)
-                return NotFound();
-
-            if (produto.Preco <= 0)
-                return BadRequest(new { Erro = "O preço do produto deve ser maior que zero" });
-
-            if (produto.Quantidade < 0)
-                return BadRequest(new { Erro = "A quantidade não pode ser menor que zero" });    
-
-            produtoBanco.Nome = produto.Nome;
-            produtoBanco.Descricao = produto.Descricao;
-            produtoBanco.Preco = produto.Preco;
-            produtoBanco.Quantidade = produto.Quantidade;
-
-            _context.Produtos.Update(produtoBanco);
-            _context.SaveChanges();
-            return Ok(produtoBanco);
+            try
+            {
+                var atualizado = await _produtoService.AtualizarAsync(id, produto);
+                if (atualizado == null) return NotFound();
+                return Ok(atualizado);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Erro = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Deletar(int id)
+        public async Task<IActionResult> Deletar(int id)
         {
-            var produtoBanco = _context.Produtos.Find(id);
-
-            if (produtoBanco == null)
-                return NotFound();
-
-            _context.Produtos.Remove(produtoBanco);
-            _context.SaveChanges();
-            return NoContent();
+            var sucesso = await _produtoService.DeletarAsync(id);
+            return sucesso ? NoContent() : NotFound();
         }
-
     }
 }

@@ -2,12 +2,15 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Estoque.Consumers;
 using Estoque.Context;
+using Estoque.Services;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<ProdutoService>();
 
 // Configuração JWT
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "minha_chave_super_secreta_jwt_123456";
