@@ -2,10 +2,17 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Serilog;
+using LoggingShared.Config;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+
+// Configurar o Serilog compartilhado
+LoggingConfiguration.ConfigureSerilog("ApiGateway");
+builder.Host.UseSerilog();
 
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "minha_chave_super_secreta_jwt_123456";
 var issuer = builder.Configuration["Jwt:Issuer"] ?? "AuthService";

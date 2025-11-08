@@ -1,11 +1,17 @@
 using AuthService.Context;
+using LoggingShared.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configurar o Serilog compartilhado
+LoggingConfiguration.ConfigureSerilog("AuthService");
+builder.Host.UseSerilog();
 
 // Add services to the container.
 var connectionString =

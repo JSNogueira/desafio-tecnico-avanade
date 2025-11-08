@@ -3,12 +3,18 @@ using System.Text.Json.Serialization;
 using Estoque.Consumers;
 using Estoque.Context;
 using Estoque.Services;
+using LoggingShared.Config;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configurar o Serilog compartilhado
+LoggingConfiguration.ConfigureSerilog("EstoqueService");
+builder.Host.UseSerilog();
 
 builder.Services.AddScoped<ProdutoService>();
 

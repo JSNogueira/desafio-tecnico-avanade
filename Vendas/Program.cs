@@ -1,14 +1,20 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using LoggingShared.Config;
 using MassTransit;
 using MensagensCompartilhadas.Messages;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using Vendas.Context;
 using Vendas.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configurar o Serilog compartilhado
+LoggingConfiguration.ConfigureSerilog("VendasService");
+builder.Host.UseSerilog();
 
 // Configuração JWT
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "minha_chave_super_secreta_jwt_123456";
