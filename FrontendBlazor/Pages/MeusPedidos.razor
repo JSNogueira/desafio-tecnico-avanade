@@ -1,0 +1,70 @@
+@page "/meus-pedidos"
+@using FrontendBlazor.Models
+@using FrontendBlazor.Services
+@inject CustomAuthStateProvider AuthStateProvider
+@inject PedidoService PedidoService
+@inject NavigationManager Navigation
+
+<h3>Seus Pedidos</h3>
+
+@if (Pedidos is null)
+{
+    <p>Carregando pedidos...</p>
+}
+else if (!Pedidos.Any())
+{
+    <p>Você ainda não tem pedidos.</p>
+}
+else
+{
+    @foreach (var pedido in Pedidos)
+    {
+        <div class="card my-3 p-3">
+            <h5>Pedido #@pedido.Id</h5>
+            <p><b>Data:</b> @pedido.DataPedido.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+            <p><b>Total:</b> R$ @pedido.ValorTotal</p>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Qtd</th>
+                        <th>Preço</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in pedido.Itens)
+                    {
+                        <tr>
+                            <td>@item.NomeProduto</td>
+                            <td>@item.Quantidade</td>
+                            <td>R$ @item.PrecoUnitario</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+
+
+@code {
+    private bool IsAuthenticated = false;
+    private string UserName = "";
+    private List<PedidoDTO>? Pedidos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthStateProvider.GetAuthenticationStateAsync();
+
+        IsAuthenticated = state.User.Identity?.IsAuthenticated ?? false;
+
+        if (IsAuthenticated)
+        {
+            UserName = state.User.Identity!.Name ?? "Usuário";
+
+            // Carrega os pedidos
+            Pedidos = await PedidoService.ObterPedidosAsync();
+        }
+    }
+}

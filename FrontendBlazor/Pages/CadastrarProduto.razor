@@ -1,0 +1,105 @@
+@page "/cadastrar-produto"
+@using FrontendBlazor.Models
+@using FrontendBlazor.Services
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Administrador")]
+
+@inject ProdutoService ProdutoService
+@inject NavigationManager Nav
+
+<h3>Cadastrar Produto</h3>
+
+@if (successMessage != null)
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+
+@if (errorMessage != null)
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+<EditForm Model="produto" OnValidSubmit="Cadastrar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Nome:</label>
+        <br>
+        <InputText @bind-Value="produto.Nome" class="form-texto"/>
+    </div>
+
+    <div>
+        <label>Descrição:</label>
+        <br>
+        <InputText @bind-Value="produto.Descricao" class="form-texto"/>
+    </div>
+
+    <div>
+        <label>Preço:</label>
+        <br>
+        <InputNumber @bind-Value="produto.Preco" class="form-numero"/>
+    </div>
+
+    <div>
+        <label>Quantidade:</label>
+        <br>
+        <InputNumber @bind-Value="produto.Quantidade" class="form-numero"/>
+    </div>
+
+    <button type="submit" class="btn-cadastrar">Cadastrar</button>
+</EditForm>
+
+@code {
+    Produto produto = new Produto();
+    string? successMessage = null;
+    string? errorMessage = null;
+
+    private async Task Cadastrar()
+    {
+        var result = await ProdutoService.CadastrarProduto(produto);
+
+        if (result)
+        {
+            successMessage = "Produto cadastrado com sucesso!";
+            produto = new Produto();
+        }
+        else
+        {
+            errorMessage = "Erro ao cadastrar produto.";
+        }
+    }
+}
+
+<style>
+    .btn-cadastrar {
+        background-color: #094cd2;
+        color: white;
+        padding: 0.5rem 1.0rem;
+        margin-top: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .btn-cadastrar:hover {
+        background-color: #524bb3;
+    }
+
+    .form-texto {
+        width: 500px;
+        padding: 4px;
+        margin-bottom: 1rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    .form-numero {
+        width: 95px;
+        padding: 4px;
+        text-align: center;
+        margin-bottom: 1rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+</style>

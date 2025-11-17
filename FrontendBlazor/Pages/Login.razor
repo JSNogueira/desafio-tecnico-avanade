@@ -1,0 +1,62 @@
+@page "/login"
+@using FrontendBlazor.Models
+@using FrontendBlazor.Services
+@inject AuthService AuthService
+@inject CustomAuthStateProvider AuthState
+@inject NavigationManager Navigation
+
+<h3>Login</h3>
+
+@if (!string.IsNullOrEmpty(erro))
+{
+    <div class="alert alert-danger">@erro</div>
+}
+<EditForm Model="usuario" OnValidSubmit="FazerLogin">
+    <div class="login-form">
+        <input placeholder="Email" @bind="usuario.Email" class="form-control" />
+        <input placeholder="Senha" @bind="usuario.Senha" type="password" class="form-control" />
+        <button class="btn-login" @onclick="FazerLogin">Entrar</button>
+    </div>
+</EditForm>
+
+@code {
+    private LoginRequest usuario = new();
+    private string? erro;
+
+    private async Task FazerLogin()
+    {
+        var token = await AuthService.LoginAsync(usuario);
+        if (token == null)
+        {
+            erro = "Credenciais inválidas.";
+            return;
+        }
+
+        await AuthState.LoginAsync(token);
+        Navigation.NavigateTo("/");
+    }
+}
+
+<style>
+    .btn-login {
+        background-color: #094cd2;
+        color: white;
+        padding: 0.5rem 1.0rem;
+        margin-top: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .btn-login:hover {
+        background-color: #524bb3;
+    }
+
+    .form-control {
+        width: 500px;
+        padding: 4px;
+        margin-top: 1rem;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+</style>

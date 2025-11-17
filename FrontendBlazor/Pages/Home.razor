@@ -1,0 +1,58 @@
+﻿@page "/"
+@using FrontendBlazor.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inject CustomAuthStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+
+<PageTitle>Home</PageTitle>
+
+<h1>Olá, @UserName!</h1>
+
+<AuthorizeView>
+    <NotAuthorized>
+        <p>Faça o login para realizar pedidos e acessar outras funcionalidades.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+<AuthorizeView>
+    <Authorized>
+        <button class="btn-sair" @onclick="FazerLogout">Sair</button>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private string UserName = "visitante";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var nome = await AuthStateProvider.GetNomeAsync();
+        if (!string.IsNullOrWhiteSpace(nome))
+        {
+            UserName = nome;
+        }
+    }
+
+    private async Task FazerLogout()
+    {
+        await AuthStateProvider.LogoutAsync();
+        Navigation.NavigateTo("/");
+        Navigation.Refresh();
+    }
+}
+
+<style>
+    .btn-sair {
+        background-color: #094cd2;
+        color: white;
+        width: 100px;
+        padding: 0.5rem 1.0rem;
+        margin-top: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .btn-sair:hover {
+        background-color: #524bb3;
+    }
+</style>

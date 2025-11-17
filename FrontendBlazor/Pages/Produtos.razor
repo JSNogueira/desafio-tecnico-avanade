@@ -1,0 +1,131 @@
+@page "/produtos"
+@using FrontendBlazor.Models
+@using FrontendBlazor.Services
+@inject ProdutoService ProdutoService
+@inject CarrinhoService CarrinhoService
+
+<h3>📦 Produtos disponíveis</h3>
+
+@if (produtos == null)
+{
+    <p>Carregando produtos...</p>
+}
+else if (produtos.Count == 0)
+{
+    <p>Nenhum produto encontrado.</p>
+}
+else
+{
+    <div class="produtos-container">
+        @foreach (var p in produtos)
+        {
+            <div class="produto-card">
+                <h4>@p.Nome</h4>
+                <p>@p.Descricao</p>
+                <p><strong>Preço:</strong> @p.Preco.ToString("C")</p>
+                <div class="quantidade-container">
+                    <label>Quantidade:</label>
+                    <input type="number" min="1" max="@p.Quantidade"
+                        value="@(quantidade.ContainsKey(p.Id) ? quantidade[p.Id] : 1)"
+                        @oninput="(e => AtualizarQuantidade(p.Id, e.Value?.ToString()))" class="quantidade-input" />
+                </div>
+                <button @onclick="() => AdicionarAoCarrinho(p, quantidade[p.Id])" class="btn-add">
+                    Adicionar ao carrinho
+                </button>
+                <p><small>Estoque: @p.Quantidade</small></p>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<Produto>? produtos;
+    //private int quantidade;
+    private Dictionary<int, int> quantidade = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        produtos = await ProdutoService.ObterTodosAsync();
+
+        foreach (var p in produtos)
+        {
+            if (!quantidade.ContainsKey(p.Id))
+                quantidade[p.Id] = 1;
+        }
+    }
+
+    private void AdicionarAoCarrinho(Produto produto, int quantidade)
+    {
+        var item = new CarrinhoItem
+        {
+            ProdutoId = produto.Id,
+            Nome = produto.Nome,
+            Preco = produto.Preco,
+            Descricao = produto.Descricao,
+            Quantidade = quantidade
+        };
+
+        CarrinhoService.AdicionarItem(item);
+    }
+
+    private void AtualizarQuantidade(int produtoId, string? valorDigitado)
+    {
+        if (int.TryParse(valorDigitado, out int quantidadeVerificacada))
+        {
+            // Impede zero ou valores negativos
+            if (quantidadeVerificacada < 1)
+                quantidadeVerificacada = 1;
+        }
+        else
+        {
+            // Se for valor inválido, volta para 1
+            quantidadeVerificacada = 1;
+        }
+
+        quantidade[produtoId] = quantidadeVerificacada;
+    }
+
+}
+
+<style>
+    .produtos-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .produto-card {
+        background-color: #f9f9f9;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .produto-card h4 {
+        margin: 0 0 0.5rem 0;
+        color: #333;
+    }
+
+    .btn-add {
+        background-color: #094cd2;
+        color: white;
+        padding: 0.5rem 1.0rem;
+        margin-top: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .btn-add:hover {
+        background-color: #524bb3;
+    }
+
+    .quantidade-input {
+        width: 60px;
+        padding: 4px;
+        text-align: center;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+</style>

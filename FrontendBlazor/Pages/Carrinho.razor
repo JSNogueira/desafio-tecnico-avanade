@@ -1,0 +1,132 @@
+@page "/carrinho"
+@using FrontendBlazor.Models
+@using FrontendBlazor.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inject CarrinhoService CarrinhoService
+@inject PedidoService PedidoService
+
+
+<h3>🛒 Meu Carrinho</h3>
+
+<AuthorizeView>
+    <NotAuthorized>
+            <p>É preciso fazer o login para concluir pedidos.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@if (!string.IsNullOrEmpty(mensagem))
+{
+    @if(erro){
+        <div class="alert alert-danger">@mensagem</div>
+    } else {
+        <div class="alert alert-success">@mensagem</div>
+    }
+}
+
+@if (CarrinhoService.Itens.Count == 0)
+{
+    <p>Seu carrinho está vazio.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Preço</th>
+                <th>Quantidade</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in CarrinhoService.Itens)
+            {
+                <tr>
+                    <td>@item.Nome</td>
+                    <td>@item.Preco.ToString("C")</td>
+                    <td>@item.Quantidade</td>
+                    <td>@((item.Preco * item.Quantidade).ToString("C"))</td>
+                    <td>
+                        <button class="btn-remover" @onclick="() => RemoverItem(item.ProdutoId)"> 🗑️ Remover</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4>Total: @CarrinhoService.CalcularTotal().ToString("C")</h4>
+
+    <button @onclick="FinalizarPedido" class="btn-finalizar">Finalizar Pedido</button>
+}
+
+@code {
+    private string? mensagem;
+    private bool erro = false;
+
+    private void RemoverItem(int id)
+    {
+        CarrinhoService.RemoverItem(id);
+    }
+
+    private async Task FinalizarPedido()
+    {
+        var itens = CarrinhoService.Itens.Select(i => new PedidoItemDTO
+        {
+            ProdutoId = i.ProdutoId,
+            Quantidade = i.Quantidade
+        }).ToList();
+
+        var sucesso = await PedidoService.CriarPedido(itens);
+
+        if (sucesso)
+        {
+            erro = false;
+            mensagem = "Pedido enviado com sucesso!";
+            CarrinhoService.Limpar();
+        }
+        else
+        {
+            erro = true;
+            mensagem = "Erro ao enviar pedido.";
+        }
+    }
+}
+
+<style>
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+        border-bottom: 1px solid #ddd;
+        padding: 0.5rem;
+    }
+
+    .btn-finalizar {
+        background-color: #28a745;
+        color: white;
+        padding: 0.7rem 1.2rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .btn-finalizar:hover {
+        background-color: #218838;
+    }
+
+    .btn-remover {
+        background-color: #cb1b1b;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .btn-remover:hover {
+        background-color: #994a4a;
+    }
+</style>

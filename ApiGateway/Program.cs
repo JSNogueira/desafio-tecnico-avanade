@@ -18,6 +18,18 @@ var jwtKey = builder.Configuration["Jwt:Key"] ?? "minha_chave_super_secreta_jwt_
 var issuer = builder.Configuration["Jwt:Issuer"] ?? "AuthService";
 var keyBytes = Encoding.UTF8.GetBytes(jwtKey);
 
+// CORS para o Blazor
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5088") // Porta do Blazor
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 builder.Services
     .AddAuthentication()
     .AddJwtBearer("BearerCliente", options =>
@@ -53,9 +65,9 @@ builder.Services.AddOcelot();
 
 var app = builder.Build();
 
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
 
 await app.UseOcelot();
 

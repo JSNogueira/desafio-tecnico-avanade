@@ -131,6 +131,19 @@ services:
     networks:
       - micro_net
 
+  frontend:
+    build:
+      context: ./FrontendBlazor
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: always
+    ports:
+      - "5088:80"
+    networks:
+      - micro_net
+    environment:
+      - ApiGatewayUrl=http://apigateway:8080
+
 networks:
   micro_net:
     driver: bridge

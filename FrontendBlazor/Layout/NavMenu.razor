@@ -1,0 +1,86 @@
+﻿@using FrontendBlazor.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inject CustomAuthStateProvider AuthState
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">FrontendBlazor</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="nav flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+
+        <AuthorizeView>
+            <NotAuthorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="login">
+                        Login
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+
+        <AuthorizeView Roles="Administrador">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="cadastrar-produto">
+                    Cadastrar Produtos
+                </NavLink>
+            </div>
+        </AuthorizeView>
+
+        <AuthorizeView>
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="meus-pedidos">
+                        Meus Pedidos
+                    </NavLink>
+                </div>
+            </Authorized>
+        </AuthorizeView>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="produtos">
+                Produtos
+            </NavLink>
+        </div>
+
+        <div>
+            <NavLink href="/carrinho" class="nav-link">
+                🛒 Carrinho (@CarrinhoService.Itens.Count)
+            </NavLink>
+        </div>
+
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    [Inject] private CarrinhoService CarrinhoService { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        CarrinhoService.OnCarrinhoAtualizado += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CarrinhoService.OnCarrinhoAtualizado -= StateHasChanged;
+    }
+}
