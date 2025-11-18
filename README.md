@@ -1,8 +1,8 @@
 # Desafio Tecnico Avanade
 
-## Sistema de Vendas e Estoque — Microservices (.NET 9 + Docker + RabbitMQ + API Gateway + Blazor WASM)
+## Sistema de Vendas e Estoque — Microservices (.NET 9 + Docker + RabbitMQ + API Gateway + Blazor)
 
-Este projeto é uma arquitetura completa de microserviços construída com .NET 9, Blazor WebAssembly, RabbitMQ, MySQL e API Gateway Ocelot, totalmente orquestrado via Docker Compose.
+Este projeto é uma arquitetura completa de microserviços construída com .NET 9, Blazor, RabbitMQ, MySQL e API Gateway Ocelot, totalmente orquestrado via Docker Compose.
 
 # Como Executar o Projeto
 ## Pré-requisitos
